@@ -12,6 +12,7 @@ const Handle = Slider.Handle;
 import './styles.css';
 import 'rc-slider/assets/index.css';
 import _ from 'lodash';
+import currentBetStrategy from '../strategies/come_strategy_a'
 
 let strategyInterval = -1;
 let intervalValue = 5;
@@ -52,77 +53,21 @@ class Craps extends Component {
     this.disableAnalytics();
     clearInterval(strategyInterval);
     strategyInterval = setInterval(() => {
-      this.comeStrategy();
+      this.betStrategy();
       this.roll();
 
     }, intervalValue);
   }
 
-  passBetStrategy = () => {
-      let { player, comeOut } = this.props;
-
-      if (comeOut === true && player.bets.pass === 0) {
-        this.props.betPassLine(5);
-      }
-  }
-
-  comeStrategy = () => {
-    let { player, comeOut } = this.props;
-
-    let numbersOccupied = _.reduce(player.bets.come.numbers, (sum, n) => {
-      return sum + ((n > 0) ? 1 : 0);
-    }, 0);
-
-    let myCurrentMaxBet = 0;
-    let desiredOdds = 0;
-    switch(numbersOccupied) {
-    case 1:
-      myCurrentMaxBet = 5;
-      desiredOdds = 0;
-      break;
-    case 2:
-      myCurrentMaxBet = 5;
-      desiredOdds = 0;
-      break;
-    case 3:
-      myCurrentMaxBet = 10;
-      desiredOdds = 5;
-      break;
-    case 4:
-      myCurrentMaxBet = 10;
-      desiredOdds = 10;
-      break;
-    case 5:
-      myCurrentMaxBet = 20;
-      desiredOdds = 15;
-      break;
-    case 6:
-      myCurrentMaxBet = 35;
-      desiredOdds = 25;
-      break;
-    }
-    // myCurrentMaxBet = 50;
-    // desiredOdds = 0;
-    // myCurrentMaxBet = _.min([50, myCurrentMaxBet]);
-    if (comeOut === false) {
-      if (numbersOccupied === 0) {
-        this.props.betCome(_.max([5, myCurrentMaxBet]));
-      }
-
-      // Even out numbers on come bets
-      _.map(player.bets.come.numbers, (value, index) => {
-        if (value > 0) {
-          let currentComeOdds = player.bets.come.odds[index];
-          this.props.betComeOdds(index, desiredOdds - currentComeOdds);
-        }
-      })
-
-    }
-    else {
-      if (player.bets.pass === 0) {
-        this.props.betPassLine(_.max([5, myCurrentMaxBet]));
-      }
-    }
+  betStrategy = () => {
+    currentBetStrategy({
+      player: this.props.player,
+      comeOut: this.props.comeOut,
+      betPassLine: this.props.betPassLine,
+      betCome: this.props.betCome,
+      betComeNumber: this.props.betComeNumber,
+      betComeOdds: this.props.betComeOdds,
+    })
   }
 
   updateAnalytics = () => {
@@ -147,7 +92,7 @@ class Craps extends Component {
   }
 
   render() {
-    let { onRollButton, onBetPass, onBetCome, onTryStrategy, onStopStrategy, onSliderChange, comeStrategy} = this;
+    let { onRollButton, onBetPass, onBetCome, onTryStrategy, onStopStrategy, onSliderChange, betStrategy} = this;
     let { rolls, player, point, comeOut, chipHistory } = this.props;
 
     let lastRoll = null;
@@ -177,14 +122,13 @@ class Craps extends Component {
     return (
       <div className='root'>
         <div className='left'>
-          <h2>Craps</h2>
           <p className='short-roll-history'>
             {JSON.stringify(_.map(_.dropRight(_.takeRight(rolls, 11)), (roll) => { return roll.a + roll.b; }))}
           </p>
           {lastRoll}
           <Player player={player} point={point} />
           <div>
-            <Button className='bet-button' bsStyle="warning" onClick={comeStrategy}>Auto Bet</Button>
+            <Button className='bet-button' bsStyle="warning" onClick={betStrategy}>Auto Bet</Button>
             <Button className='bet-button' bsStyle="warning" onClick={onBetPass}>Bet 5 Pass Line</Button>
             <Button className='bet-button' bsStyle="warning" onClick={onBetCome}>Bet 5 Come</Button>
           </div>

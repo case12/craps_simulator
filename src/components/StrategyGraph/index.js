@@ -10,7 +10,8 @@ class StrategyGraph extends Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.enabled && nextProps.chipsData.length !== this.props.chipsData.length) {
+    if (nextProps.enabled && nextProps.chipsData.length !== this.props.chipsData.length ||
+      this.props.enabled === false && nextProps.enabled === true) {
       return true;
     }
     return false;
@@ -24,7 +25,7 @@ class StrategyGraph extends Component {
             margin={{top: 5, right: 30, left: 20, bottom: 5}}>
        <XAxis />
        <YAxis domain={['auto', 'auto']} />
-       <Line type="monotone" dataKey="chips" stroke="#8884d8" dot={false} isAnimationActive={true} />
+       <Line type="monotone" dataKey="chips" stroke="#8884d8" dot={false} animationDuration={500} isAnimationActive={true} />
       </LineChart>
     );
   }

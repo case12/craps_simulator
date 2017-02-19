@@ -10,7 +10,8 @@ class RollChart extends Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.enabled && nextProps.rollHistory.length !== this.props.rollHistory.length) {
+    if (nextProps.enabled && nextProps.rollHistory.length !== this.props.rollHistory.length ||
+      this.props.enabled === false && nextProps.enabled === true) {
       return true;
     }
     return false;
@@ -42,7 +43,7 @@ class RollChart extends Component {
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />
           <Legend />
-          <Bar dataKey="value" fill="#8884d8" isAnimationActive={true} />
+          <Bar dataKey="value" fill="#8884d8" animationDuration={500} isAnimationActive={true} />
         </BarChart>
       </div>
     );
