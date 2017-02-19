@@ -72,17 +72,48 @@ class Craps extends Component {
     let numbersOccupied = _.reduce(player.bets.come.numbers, (sum, n) => {
       return sum + ((n > 0) ? 1 : 0);
     }, 0);
-    let myCurrentMaxBet = numbersOccupied * 5;
-    myCurrentMaxBet = _.min([25, myCurrentMaxBet]);
+
+    let myCurrentMaxBet = 0;
+    let desiredOdds = 0;
+    switch(numbersOccupied) {
+    case 1:
+      myCurrentMaxBet = 5;
+      desiredOdds = 0;
+      break;
+    case 2:
+      myCurrentMaxBet = 5;
+      desiredOdds = 0;
+      break;
+    case 3:
+      myCurrentMaxBet = 10;
+      desiredOdds = 5;
+      break;
+    case 4:
+      myCurrentMaxBet = 10;
+      desiredOdds = 10;
+      break;
+    case 5:
+      myCurrentMaxBet = 20;
+      desiredOdds = 15;
+      break;
+    case 6:
+      myCurrentMaxBet = 35;
+      desiredOdds = 25;
+      break;
+    }
+    // myCurrentMaxBet = 50;
+    // desiredOdds = 0;
+    // myCurrentMaxBet = _.min([50, myCurrentMaxBet]);
     if (comeOut === false) {
-      this.props.betCome(_.max([5, myCurrentMaxBet]));
+      if (numbersOccupied === 0) {
+        this.props.betCome(_.max([5, myCurrentMaxBet]));
+      }
 
       // Even out numbers on come bets
       _.map(player.bets.come.numbers, (value, index) => {
         if (value > 0) {
           let currentComeOdds = player.bets.come.odds[index];
-          let desiredBet = numbersOccupied * 5;
-          this.props.betComeOdds(index, desiredBet - currentComeOdds);
+          this.props.betComeOdds(index, desiredOdds - currentComeOdds);
         }
       })
 
@@ -124,6 +155,9 @@ class Craps extends Component {
       lastRoll = rolls[rolls.length - 1];
       lastRoll = <LastRoll dieA={lastRoll.a} dieB={lastRoll.b} />
     }
+    else {
+      lastRoll = <LastRoll dieA={0} dieB={0} />
+    }
 
     let currentPoint = comeOut === true ? 'None' : point;
     const handle = (props) => {
@@ -144,11 +178,11 @@ class Craps extends Component {
       <div className='root'>
         <div className='left'>
           <h2>Craps</h2>
-          <h2>Current Point: {currentPoint}</h2>
-          <h1>
-            {lastRoll}
-          </h1>
-          <Player player={player} />
+          <p className='short-roll-history'>
+            {JSON.stringify(_.map(_.dropRight(_.takeRight(rolls, 11)), (roll) => { return roll.a + roll.b; }))}
+          </p>
+          {lastRoll}
+          <Player player={player} point={point} />
           <div>
             <Button className='bet-button' bsStyle="warning" onClick={comeStrategy}>Auto Bet</Button>
             <Button className='bet-button' bsStyle="warning" onClick={onBetPass}>Bet 5 Pass Line</Button>

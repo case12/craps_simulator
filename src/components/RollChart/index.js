@@ -10,7 +10,7 @@ class RollChart extends Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.enabled) {
+    if (nextProps.enabled && nextProps.rollHistory.length !== this.props.rollHistory.length) {
       return true;
     }
     return false;

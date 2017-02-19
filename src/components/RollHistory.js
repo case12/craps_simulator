@@ -13,14 +13,10 @@ class RollHistory extends Component {
 
   render() {
     let { history } = this.props;
-    let slice = _.takeRight(history, 10);
-    let prettyHistory = _.map(slice, (roll) => { return roll.a + roll.b; });
 
     return (
       <div>
         <p>
-          Roll History: {JSON.stringify(prettyHistory)}
-          <br />
           Total Rolls: {history.length}
         </p>
         <RollChart rollHistory={history} enabled={this.props.enabled}/>

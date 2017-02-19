@@ -6,7 +6,7 @@ import './styles.css'
 class ComeBets extends Component {
 
   render() {
-    let { numberBets, oddsBets } = this.props;
+    let { numberBets, oddsBets, point } = this.props;
     let numbers = [4, 5, 6, 8, 9, 10]
 
     return (
@@ -14,7 +14,7 @@ class ComeBets extends Component {
         <div className='come-numbers'>
           {
             _.map(numbers, index =>
-              <ComeNumber key={index} number={index} numberChips={numberBets[index]} oddsChips={oddsBets[index]} />
+              <ComeNumber key={index} point={point} number={index} numberChips={numberBets[index]} oddsChips={oddsBets[index]} />
             )
           }
         </div>
@@ -24,7 +24,7 @@ class ComeBets extends Component {
 }
 
 ComeBets.propTypes = {
-    comeBet: React.PropTypes.number,
+    point: React.PropTypes.number,
     numberBets: React.PropTypes.array,
     oddsBets: React.PropTypes.array,
   };

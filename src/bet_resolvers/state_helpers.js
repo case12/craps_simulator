@@ -6,6 +6,7 @@ export const comePath = ['player', 'bets', 'come', 'line'];
 export const comeNumberPath = ['player', 'bets', 'come', 'numbers'];
 export const comeOddsPath = ['player', 'bets', 'come', 'odds'];
 export const dontPassPath = ['player', 'bets', 'dontPass'];
+export const pointPath = ['point'];
 
 export function toConsole(state) {
   console.log(JSON.stringify(state.toJS()));

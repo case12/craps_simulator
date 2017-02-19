@@ -10,7 +10,7 @@ class StrategyGraph extends Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.enabled) {
+    if (nextProps.enabled && nextProps.chipsData.length !== this.props.chipsData.length) {
       return true;
     }
     return false;

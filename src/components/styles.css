@@ -28,6 +28,13 @@ p {
   align-items: center;
 }
 
-strong {
-  color: red;
+.last-roll{
+  margin: 0;
+  font-size: 30px;
+  text-align: center;
+}
+
+.last-roll > strong {
+  font-size: 100px;
+  margin: 0 10px;
 }

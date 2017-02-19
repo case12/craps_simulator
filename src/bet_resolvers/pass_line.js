@@ -33,12 +33,14 @@ export function evaluatePass(state, die1, die2) {
     if (total === state.get("point")) {
       state = addChips(state, getBet(state, CrapsState.passLinePath) * 2);
       state = clear(state, CrapsState.passLinePath);
+      state = clear(state, CrapsState.pointPath);
       return state.set("comeOut", true)
     }
 
     switch (total) {
     case 7:
       state = clear(state, CrapsState.passLinePath);
+      state = clear(state, CrapsState.pointPath);
       return state.set("comeOut", true);
     default:
       return state;

@@ -11,9 +11,9 @@ class LastRoll extends Component {
     let { dieA, dieB } = this.props;
 
     return (
-      <span>
-          Last Roll: <strong>{dieA + dieB}</strong> ({dieA} , {dieB})
-      </span>
+      <p className='last-roll'>
+        {dieA} <strong className='tertiary-color'>{dieA + dieB}</strong> {dieB}
+      </p>
     );
   }
 }

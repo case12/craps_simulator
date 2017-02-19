@@ -5,11 +5,11 @@ import './styles.css'
 class ComeNumber extends Component {
 
   render() {
-    let { number, numberChips, oddsChips } = this.props;
+    let { point, number, numberChips, oddsChips } = this.props;
 
     return (
       <div className='come-number border-color'>
-        <div className='number main-color'>
+        <div className={`number ${(point === number) ? 'tertiary-color' : 'main-color'}`}>
           {number}
         </div>
         <div className='chips secondary-color'>
@@ -24,6 +24,7 @@ class ComeNumber extends Component {
 }
 
 ComeNumber.propTypes = {
+    point: React.PropTypes.number,
     number: React.PropTypes.number.isRequired,
     numberChips: React.PropTypes.number.isRequired,
     oddsChips: React.PropTypes.number.isRequired,
