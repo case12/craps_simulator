@@ -1,16 +1,18 @@
-import { ROLL, BET_PASSLINE, BET_COME, BET_COMENUMBER, BET_COMEODDS } from '../constants';
+import { ROLL, BET_PASSLINE, BET_COME, BET_COMENUMBER, BET_COMEODDS, RESET, TAKE_COMEODDS } from '../constants';
 import { fromJS } from 'immutable';
 import _ from 'lodash';
 import {evaluatePass} from '../bet_resolvers/pass_line.js'
 import {evaluateCome} from '../bet_resolvers/come.js'
 import * as CrapsState from '../bet_resolvers/state_helpers.js'
 
-let INITIAL_STATE = {
+let ROLLS_INITIAL = {
   history: [],
 };
 
-export function rolls(state = fromJS(INITIAL_STATE), action = {}) {
+export function rolls(state = fromJS(ROLLS_INITIAL), action = {}) {
   switch (action.type) {
+  case RESET:
+    return fromJS(ROLLS_INITIAL);
   case ROLL:
     return state.set("history", state.get("history").push(action.payload.dice));
   default:
@@ -52,6 +54,8 @@ function updateChipHistory(state, chips) {
 
 export function craps(state = fromJS(CRAPS_INITIAL), action = {}) {
   switch (action.type) {
+  case RESET:
+    return fromJS(CRAPS_INITIAL);
   case ROLL:
     state = evaluateRoll(state, action.payload.dice.a, action.payload.dice.b);
     return updateChipHistory(state, CrapsState.getChips(state));
@@ -84,6 +88,8 @@ export function craps(state = fromJS(CRAPS_INITIAL), action = {}) {
       state = CrapsState.reduceChips(state, action.payload.bet);
     }
     return state;
+  case TAKE_COMEODDS:
+    return CrapsState.returnComeOdds(state, action.payload.number);
   default:
     return state;
   }

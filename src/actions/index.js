@@ -34,3 +34,17 @@ export function betComeNumber(number, bet) {
     payload: {number, bet}
   };
 }
+
+export function reset() {
+  return {
+    type: actionTypes.RESET,
+  };
+}
+
+export function takeComeOdds(number) {
+  return {
+    type: actionTypes.TAKE_COMEODDS,
+    payload: {number}
+  };
+}
+

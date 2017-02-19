@@ -10,38 +10,42 @@ export default function comeStrategy(props) {
     let myCurrentMaxBet = 0;
     let myDesiredOdds = 0;
     switch(numbersOccupied) {
-    case 1:
+    case 0:
       myCurrentMaxBet = 5;
+      myDesiredOdds = 0;
+      break;
+    case 1:
+      myCurrentMaxBet = 10;
       myDesiredOdds = 0;
       break;
     case 2:
-      myCurrentMaxBet = 5;
+      myCurrentMaxBet = 10;
       myDesiredOdds = 0;
       break;
     case 3:
-      myCurrentMaxBet = 10;
+      myCurrentMaxBet = 15;
       myDesiredOdds = 5;
       break;
     case 4:
-      myCurrentMaxBet = 10;
-      myDesiredOdds = 10;
+      myCurrentMaxBet = 25;
+      myDesiredOdds = 25;
       break;
     case 5:
-      myCurrentMaxBet = 20;
-      myDesiredOdds = 15;
+      myCurrentMaxBet = 35;
+      myDesiredOdds = 25;
       break;
     case 6:
-      myCurrentMaxBet = 35;
+      myCurrentMaxBet = 40;
       myDesiredOdds = 25;
       break;
     }
 
-    myCurrentMaxBet = 5;
-    myDesiredOdds = 5;
+    // myCurrentMaxBet = 5;
+    // myDesiredOdds = 5;
     if (comeOut === false) {
-      if (numbersOccupied === 0) {
-        props.betCome(_.max([5, myCurrentMaxBet]));
-      }
+      // if (numbersOccupied === 0) {
+        props.betCome(myCurrentMaxBet);
+      // }
 
       // Even out numbers on come bets
       _.map(player.bets.come.numbers, (value, index) => {
@@ -53,8 +57,8 @@ export default function comeStrategy(props) {
 
     }
     else {
-      if (player.bets.pass === 0) {
-        props.betPassLine(_.max([5, myCurrentMaxBet]));
+      if (player.bets.pass < myCurrentMaxBet) {
+        props.betPassLine(myCurrentMaxBet - player.bets.pass);
       }
     }
   }

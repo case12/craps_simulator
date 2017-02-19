@@ -17,6 +17,12 @@ export function evaluatePass(state, die1, die2) {
       return state.set("point", total);
     case 7:
     case 11:
+      if (total === 7) {
+        let comeNumbers = [4, 5, 6, 8, 9, 10];
+        _.forEach(comeNumbers, (number) => {
+          state = CrapsState.returnComeOdds(state, number)
+        })
+      }
       state = addChips(state, getBet(state, CrapsState.passLinePath) * 2);
       state = clear(state, CrapsState.passLinePath);
       return state;

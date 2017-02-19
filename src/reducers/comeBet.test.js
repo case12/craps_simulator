@@ -169,5 +169,35 @@ describe('craps reducer', () => {
         })
       })
     });
+
+    describe('player can remove odds', () => {
+      let state = crapsReducer(undefined, actions.roll(1, 4));
+      state = crapsReducer(state, actions.betCome(5));
+      state = crapsReducer(state, actions.roll(2, 6));
+      state = crapsReducer(state, actions.betComeOdds(8, 5));
+      state = crapsReducer(state, actions.roll(1, 2));
+      state = crapsReducer(state, actions.takeComeOdds(8));
+
+      it('odds no longer on number', () => {
+        expect(getBets(state).come.odds[8]).toEqual(0);
+      })
+
+      it('chips added back to player', () => {
+        expect(getChips(state)).toEqual(995);
+      })
+    })
+
+    describe('odds returned when 7 rolled in come out phase', () => {
+      let state = crapsReducer(undefined, actions.roll(1, 4));
+      state = crapsReducer(state, actions.betCome(5));
+      state = crapsReducer(state, actions.roll(2, 6));
+      state = crapsReducer(state, actions.betComeOdds(8, 10));
+      state = crapsReducer(state, actions.roll(1, 4));
+      state = crapsReducer(state, actions.roll(1, 6));
+
+      it('chips on odds returned back to player', () => {
+        expect(getChips(state)).toEqual(995);
+      })
+    })
   });
 });

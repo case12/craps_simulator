@@ -41,6 +41,15 @@ export function clearComeNumberAndOddsBet(state, number) {
   return state.setIn([...comeOddsPath, number], 0);
 }
 
+export function clearComeOddsBet(state, number) {
+  return state.setIn([...comeOddsPath, number], 0);
+}
+
+export function returnComeOdds(state, number) {
+  state = addChips(state, getComeOddsBet(state, number));
+  return clearComeOddsBet(state, number);
+}
+
 export function clear(state, indexer) {
   return state.setIn(indexer, 0);
 }

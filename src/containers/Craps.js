@@ -1,4 +1,4 @@
-import { roll, betPassLine, betCome, betComeOdds, betComeNumber } from '../actions'
+import { roll, betPassLine, betCome, betComeOdds, betComeNumber, reset } from '../actions'
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LastRoll from '../components/LastRoll';
@@ -91,8 +91,12 @@ class Craps extends Component {
     intervalValue = value;
   }
 
+  onReset = () => {
+    this.props.reset();
+  }
+
   render() {
-    let { onRollButton, onBetPass, onBetCome, onTryStrategy, onStopStrategy, onSliderChange, betStrategy} = this;
+    let { onRollButton, onBetPass, onBetCome, onTryStrategy, onStopStrategy, onSliderChange, betStrategy, onReset} = this;
     let { rolls, player, point, comeOut, chipHistory } = this.props;
 
     let lastRoll = null;
@@ -133,8 +137,11 @@ class Craps extends Component {
             <Button className='bet-button' bsStyle="warning" onClick={onBetCome}>Bet 5 Come</Button>
           </div>
           <Button className='roll-button' bsSize='large' bsStyle="success" onClick={onRollButton}>Roll</Button>
-          <Button className='bet-button' bsStyle="info" onClick={onTryStrategy}>Try Strategy</Button>
-          <Button className='bet-button' bsStyle="danger" onClick={onStopStrategy}>Stop</Button>
+          <div>
+            <Button className='bet-button' bsStyle="info" onClick={onTryStrategy}>Try Strategy</Button>
+            <Button className='bet-button' bsStyle="warning" onClick={onStopStrategy}>Stop</Button>
+          </div>
+          <Button className='bet-button' bsStyle="danger" onClick={onReset}>Reset</Button>
           <div style={wrapperStyle}>
             <Slider min={5} max={1000} defaultValue={intervalValue} onChange={onSliderChange} handle={handle} />
           </div>
@@ -156,6 +163,7 @@ function mapDispatchToProps(dispatch) {
     betCome: (amount) => dispatch(betCome(amount)),
     betComeNumber: (number, amount) => dispatch(betComeNumber(number, amount)),
     betComeOdds: (number, amount) => dispatch(betComeOdds(number, amount)),
+    reset: () => dispatch(reset()),
   };
 }
 

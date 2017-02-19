@@ -125,7 +125,7 @@ describe('craps reducer', () => {
           .toEqual(true);
 
           expect(nextState.craps.toJS().point)
-          .toEqual(5);
+          .toEqual(0);
         });
       });
 
