@@ -1,6 +1,9 @@
-import { ROLL, BET_PASSLINE } from '../constants';
-import { fromJS, List, Map } from 'immutable';
+import { ROLL, BET_PASSLINE, BET_COME, BET_COMENUMBER, BET_COMEODDS } from '../constants';
+import { fromJS } from 'immutable';
 import _ from 'lodash';
+import {evaluatePass} from '../bet_resolvers/pass_line.js'
+import {evaluateCome} from '../bet_resolvers/come.js'
+import * as CrapsState from '../bet_resolvers/state_helpers.js'
 
 let INITIAL_STATE = {
   history: [],
@@ -17,95 +20,69 @@ export function rolls(state = fromJS(INITIAL_STATE), action = {}) {
 
 let PLAYER_INITIAL = {
   chips: 1000,
+  chipHistory: [1000],
   bets: {
     pass: 0,
     dontPass: 0,
+    come: {
+      line: 0,
+      numbers: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      odds: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    }
   }
 }
 
 let CRAPS_INITIAL = {
   comeOut: true,
   point: 0,
+  maxBet: 500,
   player: PLAYER_INITIAL
 }
 
-let passBetIndexer = ['player', 'bets', 'pass'];
-let dontPassBetIndexer = ['player', 'bets', 'dontPass'];
-
-function toConsole(state) {
-  console.log(JSON.stringify(state.toJS()));
-}
-
-function getChips(state) {
-  return state.getIn(['player', 'chips'])
-}
-
-function getBet(state, indexer) {
-  return state.getIn(indexer);
-}
-
-function addChips(state, chips) {
-  let chipsAccess = ['player', 'chips'];
-  return state.setIn(chipsAccess, getChips(state) + chips);
-}
-
-function clear(state, indexer) {
-  return state.setIn(indexer, 0);
-}
-
 function evaluateRoll(state, die1, die2) {
-  let total = die1 + die2;
+  state = evaluatePass(state, die1, die2);
+  state = evaluateCome(state, die1, die2);
+  return state;
+}
 
-  if (state.get("comeOut") === true) {
-    switch (total) {
-    case 4:
-    case 5:
-    case 6:
-    case 8:
-    case 9:
-    case 10:
-      state = state.set("comeOut", false);
-      return state.set("point", total);
-    case 7:
-    case 11:
-      state = addChips(state, getBet(state, passBetIndexer) * 2);
-      state = clear(state, passBetIndexer);
-      return state;
-    case 2:
-    case 3:
-    case 12:
-      state = clear(state, passBetIndexer);
-    default:
-      return state;
-    }
-  }
-  else {
-    if (total == state.get("point")) {
-      state = addChips(state, getBet(state, passBetIndexer) * 2);
-      state = clear(state, passBetIndexer);
-      return state.set("comeOut", true)
-    }
-
-    switch (total) {
-    case 7:
-      state = clear(state, passBetIndexer);
-      return state.set("comeOut", true);
-    default:
-      return state;
-    }
-  }
+function updateChipHistory(state, chips) {
+  var chipHistory = state.getIn(['player', 'chipHistory']).push(chips);
+  return state.setIn(['player', 'chipHistory'], chipHistory);
 }
 
 export function craps(state = fromJS(CRAPS_INITIAL), action = {}) {
   switch (action.type) {
   case ROLL:
-    return evaluateRoll(state, action.payload.dice.a, action.payload.dice.b);
+    state = evaluateRoll(state, action.payload.dice.a, action.payload.dice.b);
+    return updateChipHistory(state, CrapsState.getChips(state));
   case BET_PASSLINE:
-    let playerChips = ['player', 'chips'];
-    let passline = ['player', 'bets', 'pass'];
-
-    state = state.setIn(playerChips, state.getIn(playerChips) - action.payload.bet);
-    state = state.setIn(passline, state.getIn(passline) + action.payload.bet);
+    if (action.payload.bet > state.get('maxBet'))
+      return state;
+    state = state.setIn(CrapsState.playerChipsPath, state.getIn(CrapsState.playerChipsPath) - action.payload.bet);
+    state = state.setIn(CrapsState.passLinePath, state.getIn(CrapsState.passLinePath) + action.payload.bet);
+    return state;
+  case BET_COME:
+    if (action.payload.bet > state.get('maxBet'))
+      return state;
+    if (!CrapsState.isComeOutPhase(state)) {
+      state = CrapsState.addToCome(state, action.payload.bet);
+      state = CrapsState.reduceChips(state, action.payload.bet);
+    }
+    return state;
+  case BET_COMEODDS:
+    // bet on odds if already have bets on the number
+    if (CrapsState.getComeNumberBet(state, action.payload.number, action.payload.bet) > 0) {
+      state = CrapsState.addToComeOdds(state, action.payload.number, action.payload.bet);
+      state = CrapsState.reduceChips(state, action.payload.bet);
+    }
+    // TODO: Dont surpase max allowed bet on odds
+    return state;
+  case BET_COMENUMBER:
+    // bet on number if already have bets on the number
+    if (CrapsState.getComeNumberBet(state, action.payload.number, action.payload.bet) > 0) {
+      state = CrapsState.addToComeNumber(state, action.payload.number, action.payload.bet);
+      state = CrapsState.reduceChips(state, action.payload.bet);
+    }
     return state;
   default:
     return state;

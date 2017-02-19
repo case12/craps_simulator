@@ -12,7 +12,7 @@ class LastRoll extends Component {
 
     return (
       <span>
-          Last Roll: {dieA + dieB} ({dieA} , {dieB})
+          Last Roll: <strong>{dieA + dieB}</strong> ({dieA} , {dieB})
       </span>
     );
   }

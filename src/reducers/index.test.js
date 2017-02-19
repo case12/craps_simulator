@@ -9,11 +9,18 @@ let INITIAL_STATE = {
   craps: {
     comeOut: true,
     point: 0,
+    maxBet: 500,
     player: {
       chips: 1000,
+      chipHistory: [1000],
       bets: {
         pass: 0,
         dontPass: 0,
+        come: {
+          line: 0,
+          numbers: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          odds: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
       }
     }
   }
@@ -165,6 +172,17 @@ describe('craps reducer', () => {
   });
 
   describe('betting', () => {
+    describe('player cant put more than max on a bet', () => {
+      let nextState = crapsReducer(undefined, actions.betPassLine(505));
+
+      it('doesnt allow the bet', () => {
+        expect(nextState.craps.toJS().player.chips)
+        .toEqual(1000);
+        expect(nextState.craps.toJS().player.bets.pass)
+        .toEqual(0);
+      })
+
+    })
     describe('player bets 5 on pass line', () => {
       let nextState = crapsReducer(undefined, actions.betPassLine(5));
 

@@ -1,0 +1,8 @@
+.come-root {
+  display: inline-block;
+}
+
+.come-numbers {
+  display: flex;
+  flex-direction: row;
+}

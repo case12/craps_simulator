@@ -1,3 +1,33 @@
 p {
   word-wrap: break-word
 }
+
+.main-color {
+  color: #232F4F;
+}
+
+.secondary-color {
+  color: #E67446;
+}
+
+.tertiary-color {
+  color: #FC4C3F;
+}
+
+.bg-color {
+  background-color: #FEDE78;
+}
+
+.border-color {
+  color: #A43F46;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+strong {
+  color: red;
+}

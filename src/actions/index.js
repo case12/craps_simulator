@@ -13,3 +13,24 @@ export function betPassLine(bet) {
     payload: {bet}
   };
 }
+
+export function betCome(bet) {
+  return {
+    type: actionTypes.BET_COME,
+    payload: {bet}
+  };
+}
+
+export function betComeOdds(number, bet) {
+  return {
+    type: actionTypes.BET_COMEODDS,
+    payload: {number, bet}
+  };
+}
+
+export function betComeNumber(number, bet) {
+  return {
+    type: actionTypes.BET_COMENUMBER,
+    payload: {number, bet}
+  };
+}
