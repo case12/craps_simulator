@@ -6,3 +6,5 @@ export const BET_COME = 'App/BET_COME';
 export const BET_COMEODDS = 'App/BET_COMEODDS';
 export const BET_COMENUMBER = 'App/BET_COMENUMBER';
 export const TAKE_COMEODDS = 'App/TAKE_COMEODDS';
+export const BET_DONTPASS = 'App/BET_DONTPASS';
+export const BET_DONTPASSODDS = 'App/BET_DONTPASSODDS';

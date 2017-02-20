@@ -1,11 +1,12 @@
-import { ROLL, BET_PASSLINE, BET_COME, BET_COMENUMBER, BET_COMEODDS, RESET, TAKE_COMEODDS } from '../constants';
+import { ROLL, BET_PASSLINE, BET_COME, BET_COMENUMBER, BET_COMEODDS, RESET, TAKE_COMEODDS, BET_DONTPASS, BET_DONTPASSODDS } from '../constants';
 import { fromJS } from 'immutable';
 import _ from 'lodash';
 import {evaluatePass} from '../bet_resolvers/pass_line.js'
+import {evaluateDontPass} from '../bet_resolvers/dont_pass.js'
 import {evaluateCome} from '../bet_resolvers/come.js'
 import * as CrapsState from '../bet_resolvers/state_helpers.js'
 
-let ROLLS_INITIAL = {
+export const ROLLS_INITIAL = {
   history: [],
 };
 
@@ -20,12 +21,13 @@ export function rolls(state = fromJS(ROLLS_INITIAL), action = {}) {
   }
 }
 
-let PLAYER_INITIAL = {
+const PLAYER_INITIAL = {
   chips: 1000,
   chipHistory: [1000],
   bets: {
     pass: 0,
     dontPass: 0,
+    dontPassOdds: 0,
     come: {
       line: 0,
       numbers: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -34,7 +36,7 @@ let PLAYER_INITIAL = {
   }
 }
 
-let CRAPS_INITIAL = {
+export const CRAPS_INITIAL = {
   comeOut: true,
   point: 0,
   maxBet: 500,
@@ -42,6 +44,7 @@ let CRAPS_INITIAL = {
 }
 
 function evaluateRoll(state, die1, die2) {
+  state = evaluateDontPass(state, die1, die2);
   state = evaluatePass(state, die1, die2);
   state = evaluateCome(state, die1, die2);
   return state;
@@ -90,6 +93,18 @@ export function craps(state = fromJS(CRAPS_INITIAL), action = {}) {
     return state;
   case TAKE_COMEODDS:
     return CrapsState.returnComeOdds(state, action.payload.number);
+  case BET_DONTPASS:
+    if (CrapsState.isComeOutPhase(state)) {
+      state = CrapsState.addToDontPass(state, action.payload.bet);
+      state = CrapsState.reduceChips(state, action.payload.bet);
+    }
+    return state;
+  case BET_DONTPASSODDS:
+    if (!CrapsState.isComeOutPhase(state)) {
+      state = CrapsState.addToDontPassOdds(state, action.payload.bet);
+      state = CrapsState.reduceChips(state, action.payload.bet);
+    }
+    return state;
   default:
     return state;
   }

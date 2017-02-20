@@ -48,3 +48,16 @@ export function takeComeOdds(number) {
   };
 }
 
+export function betDontPass(bet) {
+  return {
+    type: actionTypes.BET_DONTPASS,
+    payload: {bet}
+  };
+}
+
+export function betDontPassOdds(bet) {
+  return {
+    type: actionTypes.BET_DONTPASSODDS,
+    payload: {bet}
+  };
+}

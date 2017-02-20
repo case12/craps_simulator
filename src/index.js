@@ -7,7 +7,8 @@ import craps from './reducers';
 import Craps from './containers/Craps';
 import './index.css';
 
-let store = createStore(craps);
+let store = createStore(craps,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 render(
   <Provider store={store}>

@@ -1,15 +1,20 @@
 import _ from 'lodash';
 
+export const pointPath = ['point'];
 export const playerChipsPath = ['player', 'chips'];
 export const passLinePath = ['player', 'bets', 'pass'];
+export const dontPassPath = ['player', 'bets', 'dontPass'];
+export const dontPassOddsPath = ['player', 'bets', 'dontPassOdds'];
 export const comePath = ['player', 'bets', 'come', 'line'];
 export const comeNumberPath = ['player', 'bets', 'come', 'numbers'];
 export const comeOddsPath = ['player', 'bets', 'come', 'odds'];
-export const dontPassPath = ['player', 'bets', 'dontPass'];
-export const pointPath = ['point'];
 
 export function toConsole(state) {
   console.log(JSON.stringify(state.toJS()));
+}
+
+export function getPoint(state) {
+  return state.getIn(pointPath);
 }
 
 export function getChips(state) {
@@ -97,4 +102,21 @@ export function addToComeOdds(state, number, chips) {
 export function moveComeToNumber(state, number) {
   state = state.setIn([...comeNumberPath, number], getBet(state, comePath));
   return clear(state, comePath);
+}
+
+export function clearDontPassBets(state) {
+  state = clear(state, dontPassPath);
+  return clear(state, dontPassOddsPath);
+}
+
+export function addToDontPass(state, chips) {
+  return state.setIn(dontPassPath, chips);
+}
+
+export function addToDontPassOdds(state, chips) {
+  return state.setIn(dontPassOddsPath, chips);
+}
+
+export function getDontPassOddsBet(state) {
+  return state.getIn(dontPassOddsPath);
 }

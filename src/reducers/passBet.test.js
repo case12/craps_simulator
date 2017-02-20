@@ -3,27 +3,11 @@ import * as actionTypes from '../constants';
 import * as actions from '../actions';
 import { fromJS, List, Map } from 'immutable';
 import _ from 'lodash';
+import { CRAPS_INITIAL, ROLLS_INITIAL, } from './craps'
 
 let INITIAL_STATE = {
-  rolls: { history: [] },
-  craps: {
-    comeOut: true,
-    point: 0,
-    maxBet: 500,
-    player: {
-      chips: 1000,
-      chipHistory: [1000],
-      bets: {
-        pass: 0,
-        dontPass: 0,
-        come: {
-          line: 0,
-          numbers: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          odds: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-      }
-    }
-  }
+  rolls: ROLLS_INITIAL,
+  craps: CRAPS_INITIAL
 }
 
 describe('craps reducer', () => {

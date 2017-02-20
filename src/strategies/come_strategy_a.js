@@ -7,6 +7,10 @@ export default function comeStrategy(props) {
       return sum + ((n > 0) ? 1 : 0);
     }, 0);
 
+    // if (comeOut === false && player.bets.pass > 0) {
+    //   numbersOccupied++;
+    // }
+
     let myCurrentMaxBet = 0;
     let myDesiredOdds = 0;
     switch(numbersOccupied) {
@@ -15,28 +19,28 @@ export default function comeStrategy(props) {
       myDesiredOdds = 0;
       break;
     case 1:
-      myCurrentMaxBet = 10;
+      myCurrentMaxBet = 5;
       myDesiredOdds = 0;
       break;
     case 2:
-      myCurrentMaxBet = 10;
+      myCurrentMaxBet = 5;
       myDesiredOdds = 0;
       break;
     case 3:
-      myCurrentMaxBet = 15;
-      myDesiredOdds = 5;
+      myCurrentMaxBet = 5;
+      myDesiredOdds = 0;
       break;
     case 4:
-      myCurrentMaxBet = 25;
-      myDesiredOdds = 25;
+      myCurrentMaxBet = 5;
+      myDesiredOdds = 40;
       break;
     case 5:
-      myCurrentMaxBet = 35;
-      myDesiredOdds = 25;
+      myCurrentMaxBet = 5;
+      myDesiredOdds = 40;
       break;
     case 6:
-      myCurrentMaxBet = 40;
-      myDesiredOdds = 25;
+      myCurrentMaxBet = 5;
+      myDesiredOdds = 40;
       break;
     }
 
