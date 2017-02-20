@@ -1,4 +1,4 @@
-import { roll, betPassLine, betCome, betComeOdds, betComeNumber, reset } from '../actions'
+import { roll, betPassLine, betCome, betComeOdds, betComeNumber, reset, betDontPass, betDontPassOdds } from '../actions'
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LastRoll from '../components/LastRoll';
@@ -49,6 +49,14 @@ class Craps extends Component {
     this.props.betCome(5);
   }
 
+  onBetDontPass = () => {
+    this.props.betDontPass(5);
+  }
+
+  onBetDontPassOdds = () => {
+    this.props.betDontPassOdds(5);
+  }
+
   onTryStrategy = () => {
     this.disableAnalytics();
     clearInterval(strategyInterval);
@@ -96,7 +104,7 @@ class Craps extends Component {
   }
 
   render() {
-    let { onRollButton, onBetPass, onBetCome, onTryStrategy, onStopStrategy, onSliderChange, betStrategy, onReset} = this;
+    let { onRollButton, onBetPass, onBetCome, onTryStrategy, onStopStrategy, onSliderChange, betStrategy, onReset, onBetDontPass, onBetDontPassOdds} = this;
     let { rolls, player, point, comeOut, chipHistory } = this.props;
 
     let lastRoll = null;
@@ -133,8 +141,10 @@ class Craps extends Component {
           <Player player={player} point={point} />
           <div>
             <Button className='bet-button' bsStyle="warning" onClick={betStrategy}>Auto Bet</Button>
-            <Button className='bet-button' bsStyle="warning" onClick={onBetPass}>Bet 5 Pass Line</Button>
-            <Button className='bet-button' bsStyle="warning" onClick={onBetCome}>Bet 5 Come</Button>
+            <Button className='bet-button' bsStyle="warning" onClick={onBetPass}>Bet Pass Line</Button>
+            <Button className='bet-button' bsStyle="warning" onClick={onBetCome}>Bet Come</Button>
+            <Button className='bet-button' bsStyle="warning" onClick={onBetDontPass}>Bet Dont Pass</Button>
+            <Button className='bet-button' bsStyle="warning" onClick={onBetDontPassOdds}>Bet DP Odds</Button>
           </div>
           <Button className='roll-button' bsSize='large' bsStyle="success" onClick={onRollButton}>Roll</Button>
           <div>
@@ -163,6 +173,8 @@ function mapDispatchToProps(dispatch) {
     betCome: (amount) => dispatch(betCome(amount)),
     betComeNumber: (number, amount) => dispatch(betComeNumber(number, amount)),
     betComeOdds: (number, amount) => dispatch(betComeOdds(number, amount)),
+    betDontPass: (amount) => dispatch(betDontPass(amount)),
+    betDontPassOdds: (amount) => dispatch(betDontPassOdds(amount)),
     reset: () => dispatch(reset()),
   };
 }

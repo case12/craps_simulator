@@ -110,11 +110,11 @@ export function clearDontPassBets(state) {
 }
 
 export function addToDontPass(state, chips) {
-  return state.setIn(dontPassPath, chips);
+  return state.setIn(dontPassPath, getBet(state, dontPassPath) + chips);
 }
 
 export function addToDontPassOdds(state, chips) {
-  return state.setIn(dontPassOddsPath, chips);
+  return state.setIn(dontPassOddsPath, getBet(state, dontPassOddsPath) + chips);
 }
 
 export function getDontPassOddsBet(state) {

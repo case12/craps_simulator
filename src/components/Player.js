@@ -17,6 +17,8 @@ class Player extends Component {
           <ComeBets point={point} comeBet={player.bets.come.line} numberBets={player.bets.come.numbers} oddsBets={player.bets.come.odds} />
           <LineBet label='Come' bet={player.bets.come.line} />
           <LineBet label='Pass' bet={player.bets.pass} />
+          <LineBet label='Dont Pass' bet={player.bets.dontPass} />
+          <LineBet label='Dont Pass Odds' bet={player.bets.dontPassOdds} />
           <h2>Chips: {player.chips}</h2>
       </div>
     );
