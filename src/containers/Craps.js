@@ -75,6 +75,8 @@ class Craps extends Component {
       betCome: this.props.betCome,
       betComeNumber: this.props.betComeNumber,
       betComeOdds: this.props.betComeOdds,
+      betDontPass: this.props.betDontPass,
+      betDontPassOdds: this.props.betDontPassOdds,
     })
   }
 

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-export default function comeStrategy(props) {
+export default function comeDontPassStrategy(props) {
     let { player, comeOut } = props;
 
     let numbersOccupied = _.reduce(player.bets.come.numbers, (sum, n) => {
@@ -19,37 +19,44 @@ export default function comeStrategy(props) {
       myDesiredOdds = 0;
       break;
     case 1:
-      myCurrentMaxBet = 10;
+      myCurrentMaxBet = 5;
       myDesiredOdds = 0;
       break;
     case 2:
-      myCurrentMaxBet = 10;
-      myDesiredOdds = 10;
+      myCurrentMaxBet = 5;
+      myDesiredOdds = 0;
       break;
     case 3:
-      myCurrentMaxBet = 15;
-      myDesiredOdds = 10;
+      myCurrentMaxBet = 5;
+      myDesiredOdds = 0;
       break;
     case 4:
-      myCurrentMaxBet = 15;
-      myDesiredOdds = 15;
+      myCurrentMaxBet = 5;
+      myDesiredOdds = 40;
       break;
     case 5:
-      myCurrentMaxBet = 25;
-      myDesiredOdds = 25;
+      myCurrentMaxBet = 5;
+      myDesiredOdds = 40;
       break;
     case 6:
-      myCurrentMaxBet = 25;
-      myDesiredOdds = 25;
+      myCurrentMaxBet = 5;
+      myDesiredOdds = 40;
       break;
     }
 
     // myCurrentMaxBet = 5;
     // myDesiredOdds = 5;
     if (comeOut === false) {
+      // Bet the come to keep getting chips on numbers
       // if (numbersOccupied === 0) {
-        props.betCome(myCurrentMaxBet);
+      props.betCome(myCurrentMaxBet);
       // }
+
+      // Bet the dont pass odds if necessary for insurance
+      let desiredDPOddsBet = 5 + numbersOccupied * 5;
+      if (player.bets.dontPassOdds < desiredDPOddsBet) {
+        props.betDontPassOdds(desiredDPOddsBet - player.bets.dontPassOdds);
+      }
 
       // Even out numbers on come bets
       _.map(player.bets.come.numbers, (value, index) => {
@@ -61,8 +68,8 @@ export default function comeStrategy(props) {
 
     }
     else {
-      if (player.bets.pass < myCurrentMaxBet) {
-        props.betPassLine(myCurrentMaxBet - player.bets.pass);
+      if (player.bets.dontPass === 0) {
+        props.betDontPass(5);
       }
     }
   }
