@@ -13,3 +13,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## Testing
 `npm test`
+
+## Implementing a Strategy
+Program a new strategy in the strategies folder (use others as a tempate).  Reference it at the top of Craps.js.  Go back to browser and test it out!
